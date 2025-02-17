@@ -4,5 +4,5 @@ data class Artwork(
     val id: Int,
     val title: String,
     val artistDisplay: String,
-    val imageId: String
+    val imageUrl: String
 )

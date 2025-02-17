@@ -9,6 +9,6 @@ fun Artwork.toArtworkUi(): ArtworkUi {
         id = id,
         title = title,
         artistDisplay = artistDisplay,
-        imageId = imageId
+        imageUrl = imageUrl
     )
 }

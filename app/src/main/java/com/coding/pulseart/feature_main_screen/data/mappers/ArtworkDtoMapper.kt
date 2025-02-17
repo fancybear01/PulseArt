@@ -8,6 +8,6 @@ fun ArtworkDto.toArtwork(): Artwork {
         id = id,
         title = title,
         artistDisplay = artist_display,
-        imageId = image_id
+        imageUrl = "https://www.artic.edu/iiif/2/$image_id/full/400,/0/default.jpg"
     )
 }
