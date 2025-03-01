@@ -11,23 +11,24 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.coding.pulseart.ui.theme.PulseArtTheme
-
 @Composable
 fun BottomNavigationBar(navController: NavController) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surfaceContainer
     ) {
-        val backStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = backStackEntry?.destination?.route
-
         NavBarItems.BarItems.forEach { navItem ->
             NavigationBarItem(
-                selected = currentRoute == navItem.route,
+                selected = currentRoute == navItem.route.toString(),
                 onClick = {
-                    navController.navigate(navItem.route) {
-                        popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
+                    // Используем Screen для навигации
+                    when (navItem.screen) {
+                        is Screen.ArtworkList -> navController.navigate(Screen.ArtworkList)
+                        is Screen.Favourite -> navController.navigate(Screen.Favourite)
+                        is Screen.Settings -> navController.navigate(Screen.Settings)
+                        is Screen.ArtworkDetails -> navController.navigate(Screen.ArtworkDetails("1234"))
                     }
                 },
                 icon = {

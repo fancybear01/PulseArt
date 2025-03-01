@@ -21,20 +21,37 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.coding.pulseart.feature_main_screen.presentation.art_list.components.ArtworkListItem
+import org.koin.androidx.compose.koinViewModel
+
+@Composable
+fun ArtworkListScreenCore(
+    viewModel: ArtListViewModel = koinViewModel(),
+    onArtworkClick: (String) -> Unit,
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    ArtworkListScreen(
+        state = state,
+        onAction = viewModel::onAction,
+        onArtworkClick = onArtworkClick
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ArtworkListScreen(
     state: ArtworkListState,
     onAction: (ArtworkListAction) -> Unit,
-    modifier: Modifier = Modifier
+    onArtworkClick: (String) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         state = rememberTopAppBarState()

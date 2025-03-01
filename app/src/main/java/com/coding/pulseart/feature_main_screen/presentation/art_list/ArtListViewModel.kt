@@ -45,11 +45,23 @@ class ArtListViewModel(
         _state.update { it.copy(selectedArtwork = artworkUi) }
 
         viewModelScope.launch {
-            _state.update {
-                it.copy(
-                    selectedArtwork = it.selectedArtwork
+            artworkDataSource
+                .getArtwork(
+                    artworkId = artworkUi.id
                 )
-            }
+                .onSuccess {
+
+                    _state.update {
+                        it.copy(
+                            selectedArtwork = it.selectedArtwork
+                        )
+                    }
+
+                }
+                .onError {
+                     error ->
+                    _events.send(ArtworkListEvent.Error(error))
+                }
         }
     }
 

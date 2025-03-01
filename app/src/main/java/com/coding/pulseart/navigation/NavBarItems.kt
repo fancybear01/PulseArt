@@ -10,17 +10,20 @@ object NavBarItems {
         BarItem(
             title = "Art",
             image = Icons.Filled.Home,
-            route = "art"
+            route = Screen.ArtworkList,
+            screen = Screen.ArtworkList
         ),
         BarItem(
             title = "Favourite",
             image = Icons.Filled.Favorite,
-            route = "favourite"
+            route = Screen.Favourite,
+            screen = Screen.Favourite
         ),
         BarItem(
             title = "Settings",
             image = Icons.Filled.Settings,
-            route = "settings"
+            route = Screen.Settings,
+            screen = Screen.Settings
         )
     )
 }
