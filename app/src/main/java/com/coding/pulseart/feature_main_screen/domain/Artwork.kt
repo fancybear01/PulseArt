@@ -4,5 +4,6 @@ data class Artwork(
     val id: String,
     val title: String,
     val artistDisplay: String,
-    val imageUrl: String
+    val imageUrl: String,
+    val nextPage: String? = null
 )

@@ -36,7 +36,7 @@ import com.coding.pulseart.ui.theme.PulseArtTheme
 @Composable
 fun ArtworkListItem(
     artworkUi: ArtworkUi,
-    onClick: () -> Unit,
+    onArtworkDetailClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val contentColor = if (isSystemInDarkTheme()) {
@@ -44,65 +44,62 @@ fun ArtworkListItem(
     } else {
         Color.Black
     }
-    Card(
-        onClick = onClick,
-        modifier = Modifier.padding(8.dp)
+
+    Column(
+        modifier = modifier
+            .clickable {onArtworkDetailClick(artworkUi.id)}
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.Start
     ) {
-        Column(
-            modifier = modifier
-                .clickable(onClick = onClick)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.Start
-        ) {
-            AsyncImage(
-                model = artworkUi.imageUrl,
-                contentDescription = artworkUi.title,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(250.dp)
-                    .background(MaterialTheme.colorScheme.primary.copy(0.3f))
-            )
+        AsyncImage(
+            model = artworkUi.imageUrl,
+            contentDescription = artworkUi.title,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(250.dp)
+                .background(MaterialTheme.colorScheme.primary.copy(0.3f))
+        )
 
-            Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
-            Text(
-                text = artworkUi.title,
-                fontSize = 20.sp,
-                style = MaterialTheme.typography.displayLarge,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(horizontal = 16.dp),
-                color = contentColor
-            )
+        Text(
+            text = artworkUi.title,
+            fontSize = 20.sp,
+            style = MaterialTheme.typography.displayLarge,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.padding(horizontal = 16.dp),
+            color = contentColor
+        )
 
-            Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
-            Text(
-                text = artworkUi.artistDisplay,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                fontSize = 17.sp,
-                fontStyle = FontStyle.Italic,
-                style = MaterialTheme.typography.displayMedium,
-                modifier = Modifier.padding(
-                    horizontal = 16.dp
-                ),
-                color = contentColor
-            )
+        Text(
+            text = artworkUi.artistDisplay,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            fontSize = 17.sp,
+            fontStyle = FontStyle.Italic,
+            style = MaterialTheme.typography.displayMedium,
+            modifier = Modifier.padding(
+                horizontal = 16.dp
+            ),
+            color = contentColor
+        )
 
-            Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(10.dp)
-                    .clip(shape = RoundedCornerShape(30.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(0.5f))
-            )
-        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(10.dp)
+                .clip(shape = RoundedCornerShape(30.dp))
+                .background(MaterialTheme.colorScheme.surfaceVariant.copy(0.5f))
+        )
     }
+
 }
 
 
@@ -112,7 +109,7 @@ private fun ArtworkListItemPreview() {
     PulseArtTheme {
         ArtworkListItem(
             artworkUi = previewArtwork,
-            onClick = {},
+            onArtworkDetailClick = {},
             modifier = Modifier.background(
                 MaterialTheme.colorScheme.background
             )

@@ -1,9 +1,9 @@
 package com.coding.pulseart.feature_main_screen.presentation.art_detail
 
-import com.coding.pulseart.feature_main_screen.domain.Artwork
+import com.coding.pulseart.feature_main_screen.domain.ArtworkDetail
 
 data class ArtworkDetailState(
-    val artwork: Artwork? = null,
+    val artworkDetail: ArtworkDetail? = null,
     val isLoading: Boolean = false,
     val isError: Boolean = false
 )

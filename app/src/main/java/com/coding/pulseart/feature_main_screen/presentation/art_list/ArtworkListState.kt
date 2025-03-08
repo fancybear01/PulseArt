@@ -7,5 +7,8 @@ import com.coding.pulseart.feature_main_screen.presentation.models.ArtworkUi
 data class ArtworkListState (
     val isLoading: Boolean = false,
     val artworks: List<ArtworkUi> = emptyList(),
-    val selectedArtwork: ArtworkUi? = null
+    val selectedArtwork: ArtworkUi? = null,
+    val nextPage: Int? = null,
+    val isEndReached: Boolean = false,
+    val totalPages: Int = 1411,
 )

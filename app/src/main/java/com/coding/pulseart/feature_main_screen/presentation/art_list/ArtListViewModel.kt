@@ -1,7 +1,10 @@
 package com.coding.pulseart.feature_main_screen.presentation.art_list
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.coding.pulseart.core.domain.util.onError
 import com.coding.pulseart.core.domain.util.onSuccess
 import com.coding.pulseart.feature_main_screen.data.mappers.toArtworkUi
@@ -35,58 +38,57 @@ class ArtListViewModel(
 
     fun onAction(action: ArtworkListAction) {
         when (action) {
-            is ArtworkListAction.OnArtworkClick -> {
-                selectArtwork(action.artworkUi)
+            is ArtworkListAction.LoadInitial -> {
+                if (state.value.artworks.isEmpty()) {
+                    loadArtworks(page = 1)
+                }
+            }
+            is ArtworkListAction.Paginate -> {
+                if (
+                    !state.value.isLoading &&
+                    !state.value.isEndReached
+                    ) {
+                    loadArtworks()
+                }
             }
         }
     }
 
-    private fun selectArtwork(artworkUi: ArtworkUi) {
-        _state.update { it.copy(selectedArtwork = artworkUi) }
 
-        viewModelScope.launch {
-            artworkDataSource
-                .getArtwork(
-                    artworkId = artworkUi.id
-                )
-                .onSuccess {
-
-                    _state.update {
-                        it.copy(
-                            selectedArtwork = it.selectedArtwork
-                        )
-                    }
-
-                }
-                .onError {
-                     error ->
-                    _events.send(ArtworkListEvent.Error(error))
-                }
-        }
-    }
-
-    private suspend fun loadArtworks() {
+    private fun loadArtworks(page: Int? = null) {
+        val targetPage = page ?: _state.value.nextPage
+        if (state.value.isLoading ||
+            (targetPage != null && targetPage > 1 && state.value.isEndReached)) return
         viewModelScope.launch {
             _state.update {
                 it.copy(
-                    isLoading = true
+                    isLoading = true,
+                    artworks = if (page == 1) emptyList() else it.artworks
                 )
             }
-        }
 
-        artworkDataSource
-            .getArtworks()
-            .onSuccess { artworks ->
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        artworks = artworks.map { it.toArtworkUi() }
-                    )
+
+            artworkDataSource
+                .getArtworks(targetPage.toString())
+                .onSuccess { response ->
+                    val (newArtworks, pagination) = response
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            artworks = if (page == null) {
+                                it.artworks + newArtworks.map { it.toArtworkUi() }
+                            } else {
+                                newArtworks.map { it.toArtworkUi() }
+                            },
+                            isEndReached = pagination.currentPage >= pagination.totalPages,
+                            nextPage = pagination.currentPage + 1
+                        )
+                    }
                 }
-            }
-            .onError { error ->
-                _state.update { it.copy(isLoading = false) }
-                _events.send(ArtworkListEvent.Error(error))
-            }
+                .onError { error ->
+                    _state.update { it.copy(isLoading = false) }
+                    _events.send(ArtworkListEvent.Error(error))
+                }
+        }
     }
 }
