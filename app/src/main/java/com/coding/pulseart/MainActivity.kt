@@ -18,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.toRoute
 import com.coding.pulseart.feature_main_screen.presentation.art_detail.ArtworkDetailScreenCore
+import com.coding.pulseart.feature_main_screen.presentation.art_favorites.FavouriteScreenCore
 import com.coding.pulseart.feature_main_screen.presentation.art_list.ArtworkListScreenCore
 import com.coding.pulseart.navigation.BottomNavigationBar
 import com.coding.pulseart.navigation.Screen
@@ -71,7 +72,9 @@ fun MainScreen() {
                 }
             }
             composable<Screen.Favourite> {
-                FavouriteScreen()
+                FavouriteScreenCore {
+                    navController.navigate(Screen.ArtworkDetails(it))
+                }
             }
             composable<Screen.Settings> {
                 SettingsScreen()
@@ -85,15 +88,6 @@ fun MainScreen() {
 }
 
 
-@Composable
-fun Home() {
-    Text("Art Page", fontSize = 30.sp)
-}
-
-@Composable
-fun FavouriteScreen() {
-    Text("Favourite Page", fontSize = 30.sp)
-}
 
 @Composable
 fun SettingsScreen() {
