@@ -53,4 +53,18 @@ class RemoteArtworkDataSource(
             response.data.toArtworkDetail()
         }
     }
+
+    override suspend fun searchArtworks(query: String): Result<List<Artwork>, NetworkError> {
+        return safeCall<ArtworkResponseDto> {
+            httpClient.get(
+                urlString = constructUrl("/artworks/search?q=$query")
+            ) {
+                url {
+                    parameters.append("q", query)
+                }
+            }
+        }.map { response ->
+            response.data.map { it.toArtwork() }
+        }
+    }
 }

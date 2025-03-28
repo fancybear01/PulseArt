@@ -27,7 +27,7 @@ fun BottomNavigationBar(navController: NavController) {
                     when (navItem.screen) {
                         is Screen.ArtworkList -> navController.navigate(Screen.ArtworkList)
                         is Screen.Favourite -> navController.navigate(Screen.Favourite)
-                        is Screen.Settings -> navController.navigate(Screen.Settings)
+                        is Screen.Search -> navController.navigate(Screen.Search)
                         is Screen.ArtworkDetails -> navController.navigate(Screen.ArtworkDetails("1234"))
                     }
                 },

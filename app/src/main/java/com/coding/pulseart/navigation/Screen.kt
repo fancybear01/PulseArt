@@ -9,7 +9,7 @@ sealed interface Screen {
     data object Favourite : Screen
 
     @kotlinx.serialization.Serializable
-    data object Settings : Screen
+    data object Search : Screen
 
     @kotlinx.serialization.Serializable
     data class ArtworkDetails(val artworkId: String) : Screen

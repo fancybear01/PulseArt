@@ -3,6 +3,7 @@ package com.coding.pulseart.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 
 object NavBarItems {
@@ -20,10 +21,10 @@ object NavBarItems {
             screen = Screen.Favourite
         ),
         BarItem(
-            title = "Settings",
-            image = Icons.Filled.Settings,
-            route = Screen.Settings,
-            screen = Screen.Settings
+            title = "Search",
+            image = Icons.Filled.Search,
+            route = Screen.Search,
+            screen = Screen.Search
         )
     )
 }

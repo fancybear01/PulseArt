@@ -1,15 +1,11 @@
 package com.coding.pulseart.feature_main_screen.presentation.art_list
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.coding.pulseart.core.domain.util.onError
 import com.coding.pulseart.core.domain.util.onSuccess
 import com.coding.pulseart.feature_main_screen.data.mappers.toArtworkUi
 import com.coding.pulseart.feature_main_screen.domain.ArtworkDataSource
-import com.coding.pulseart.feature_main_screen.presentation.models.ArtworkUi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

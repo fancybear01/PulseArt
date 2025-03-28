@@ -20,6 +20,7 @@ import androidx.navigation.toRoute
 import com.coding.pulseart.feature_main_screen.presentation.art_detail.ArtworkDetailScreenCore
 import com.coding.pulseart.feature_main_screen.presentation.art_favorites.FavouriteScreenCore
 import com.coding.pulseart.feature_main_screen.presentation.art_list.ArtworkListScreenCore
+import com.coding.pulseart.feature_main_screen.presentation.art_search.SearchScreenCore
 import com.coding.pulseart.navigation.BottomNavigationBar
 import com.coding.pulseart.navigation.Screen
 import com.coding.pulseart.ui.theme.PulseArtTheme
@@ -76,8 +77,10 @@ fun MainScreen() {
                     navController.navigate(Screen.ArtworkDetails(it))
                 }
             }
-            composable<Screen.Settings> {
-                SettingsScreen()
+            composable<Screen.Search> {
+                SearchScreenCore {
+                    navController.navigate(Screen.ArtworkDetails(it))
+                }
             }
             composable<Screen.ArtworkDetails> { backStackEntry ->
                 val artwork: Screen.ArtworkDetails = backStackEntry.toRoute()
@@ -86,14 +89,6 @@ fun MainScreen() {
         }
     }
 }
-
-
-
-@Composable
-fun SettingsScreen() {
-    Text("Settings Page", fontSize = 30.sp)
-}
-
 
 @Preview
 @Composable
