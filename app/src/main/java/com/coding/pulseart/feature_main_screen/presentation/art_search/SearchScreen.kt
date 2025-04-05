@@ -7,7 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -33,7 +31,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,22 +39,17 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.wear.compose.material.ContentAlpha
-import androidx.wear.compose.material.LocalContentAlpha
-import coil.compose.AsyncImage
 import com.coding.pulseart.core.presentation.util.toString
-import com.coding.pulseart.feature_main_screen.domain.Artwork
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
-
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
+import com.coding.pulseart.feature_main_screen.domain.SearchItem
 
 @Composable
 fun SearchScreenCore(
@@ -103,9 +95,10 @@ fun SearchScreenCore(
                 state.error != null -> {
 
                 }
+
                 state.results.isEmpty() -> EmptySearchState()
                 else -> SearchResultsList(
-                    artworks = state.results,
+                    artworkSearchItems = state.results,
                     onArtworkSelected = onArtworkSelected,
                     modifier = Modifier.padding(8.dp)
                 )
@@ -122,7 +115,7 @@ private fun SearchTopBar(
     onSearch: () -> Unit
 ) {
     var isSearchActive by remember { mutableStateOf(false) }
-
+    var expanded by remember { mutableStateOf(false) }
     TopAppBar(
         title = { Text("Поиск произведений") },
         colors = TopAppBarDefaults.topAppBarColors(
@@ -131,20 +124,34 @@ private fun SearchTopBar(
         ),
         actions = {
             SearchBar(
-                query = query,
-                onQueryChange = onQueryChange,
-                onSearch = { onSearch() },
-                active = active,
-                onActiveChange = { active = it },
-                modifier = Modifier.fillMaxWidth()
-            )
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+                inputField = {
+                    SearchBarDefaults.InputField(
+                        query = query,
+                        onQueryChange = onQueryChange,
+                        onSearch = {
+                            onSearch()
+                            expanded = false
+                        },
+                        expanded = expanded,
+                        onExpandedChange = { expanded = it },
+                        placeholder = { Text("Search") }
+                    )
+                },
+                expanded = expanded,
+                onExpandedChange = { expanded = it },
+            ) {
+
+            }
         }
     )
 }
 
 @Composable
 private fun SearchResultsList(
-    artworks: List<Artwork>,
+    artworkSearchItems: List<SearchItem>,
     onArtworkSelected: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -152,9 +159,9 @@ private fun SearchResultsList(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        items(artworks) { artwork ->
+        items(artworkSearchItems) { artwork ->
             ArtworkSearchItem(
-                artwork = artwork,
+                artworkSearchItem = artwork,
                 onClick = { onArtworkSelected(artwork.id) }
             )
         }
@@ -163,7 +170,7 @@ private fun SearchResultsList(
 
 @Composable
 private fun ArtworkSearchItem(
-    artwork: Artwork,
+    artworkSearchItem: SearchItem,
     onClick: () -> Unit
 ) {
     Card(
@@ -175,32 +182,32 @@ private fun ArtworkSearchItem(
             modifier = Modifier.padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            AsyncImage(
-                model = artwork.imageUrl,
-                contentDescription = artwork.title,
-                modifier = Modifier
-                    .size(80.dp)
-                    .clip(MaterialTheme.shapes.medium),
-                contentScale = ContentScale.Crop
-            )
-
-            Spacer(modifier = Modifier.width(16.dp))
+//            AsyncImage(
+//                model = artwork.imageUrl,
+//                contentDescription = artwork.title,
+//                modifier = Modifier
+//                    .size(80.dp)
+//                    .clip(MaterialTheme.shapes.medium),
+//                contentScale = ContentScale.Crop
+//            )
+//
+//            Spacer(modifier = Modifier.width(16.dp))
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = artwork.title,
+                    text = artworkSearchItem.title,
                     style = MaterialTheme.typography.titleMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                    Text(
-                        text = artwork.artistDisplay,
-                        style = MaterialTheme.typography.bodyMedium,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
+//                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+//                    Text(
+//                        text = artworkSearchItem.artistDisplay,
+//                        style = MaterialTheme.typography.bodyMedium,
+//                        maxLines = 1,
+//                        overflow = TextOverflow.Ellipsis
+//                    )
+//                }
             }
         }
     }

@@ -11,13 +11,16 @@ import com.coding.pulseart.core.domain.util.map
 import com.coding.pulseart.feature_main_screen.data.mappers.toArtwork
 import com.coding.pulseart.feature_main_screen.data.mappers.toArtworkDetail
 import com.coding.pulseart.feature_main_screen.data.mappers.toPagination
+import com.coding.pulseart.feature_main_screen.data.mappers.toSearchItem
 import com.coding.pulseart.feature_main_screen.data.networking.dto.ArtworkDetailDto
 import com.coding.pulseart.feature_main_screen.data.networking.dto.ArtworkDetailResponseDto
 import com.coding.pulseart.feature_main_screen.data.networking.dto.ArtworkResponseDto
+import com.coding.pulseart.feature_main_screen.data.networking.dto.SearchResponseDto
 import com.coding.pulseart.feature_main_screen.domain.Artwork
 import com.coding.pulseart.feature_main_screen.domain.ArtworkDataSource
 import com.coding.pulseart.feature_main_screen.domain.ArtworkDetail
 import com.coding.pulseart.feature_main_screen.domain.Pagination
+import com.coding.pulseart.feature_main_screen.domain.SearchItem
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 
@@ -54,8 +57,8 @@ class RemoteArtworkDataSource(
         }
     }
 
-    override suspend fun searchArtworks(query: String): Result<List<Artwork>, NetworkError> {
-        return safeCall<ArtworkResponseDto> {
+    override suspend fun searchArtworks(query: String): Result<List<SearchItem>, NetworkError> {
+        return safeCall<SearchResponseDto> {
             httpClient.get(
                 urlString = constructUrl("/artworks/search?q=$query")
             ) {
@@ -64,7 +67,7 @@ class RemoteArtworkDataSource(
                 }
             }
         }.map { response ->
-            response.data.map { it.toArtwork() }
+            response.data.map { it.toSearchItem() }
         }
     }
 }
