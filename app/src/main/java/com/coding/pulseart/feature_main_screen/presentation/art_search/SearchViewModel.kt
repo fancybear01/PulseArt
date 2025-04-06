@@ -44,9 +44,13 @@ class SearchViewModel(
         }
     }
 
+   // private var searchJob: Job? = null
+
     fun searchArtworks() {
+      //  searchJob?.cancel() // Отменяем предыдущий запрос
+      //  searchJob = viewModelScope.launch {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, error = null) }
+            _state.update { it.copy(isLoading = false, error = null) }
 
             artworkDataSource
                 .searchArtworks(_state.value.searchQuery)

@@ -6,4 +6,5 @@
     <string name="error_no_internet">Не удалось подключиться к серверу, пожалуйста, проверьте ваше интернет-соединение.</string>
     <string name="error_unknown">Что-то пошло не так. Пожалуйста, повторите попытку позже.</string>
     <string name="error_serialization">Не удалось сериализовать или десериализовать данные..</string>
+    <string name="search_artworks">Поиск произведений</string>
 </resources>
