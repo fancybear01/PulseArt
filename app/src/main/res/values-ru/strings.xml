@@ -7,4 +7,7 @@
     <string name="error_unknown">Что-то пошло не так. Пожалуйста, повторите попытку позже.</string>
     <string name="error_serialization">Не удалось сериализовать или десериализовать данные..</string>
     <string name="search_artworks">Поиск произведений</string>
+    <string name="search">Поиск</string>
+    <string name="enter_query">Введите запрос для поиска произведений</string>
+    <string name="are_you_interested_in_something">Что-то интересует?</string>
 </resources>

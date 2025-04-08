@@ -96,7 +96,7 @@ fun ArtworkListScreen(
                     )
                 },
                 windowInsets = WindowInsets(
-                    top = 30.dp, bottom = 8.dp
+                    top =0.dp, bottom = 8.dp
                 )
             )
         }

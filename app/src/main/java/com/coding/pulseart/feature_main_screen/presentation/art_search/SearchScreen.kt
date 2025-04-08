@@ -4,6 +4,7 @@ package com.coding.pulseart.feature_main_screen.presentation.art_search
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -70,7 +71,6 @@ import com.coding.pulseart.feature_main_screen.domain.SearchItem
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreenCore(
     onArtworkSelected: (String) -> Unit
@@ -83,7 +83,7 @@ fun SearchScreenCore(
     LaunchedEffect(Unit) {
         snapshotFlow { state.searchQuery }
             .distinctUntilChanged()
-            .debounce(100) // Дополнительный debounce в UI
+            .debounce(300) // Дополнительный debounce в UI
             .collect { query ->
                 if (query.length >= 3) {
                     viewModel.searchArtworks()
@@ -93,16 +93,32 @@ fun SearchScreenCore(
 
     Scaffold(
         topBar = {
-            SearchTopBar(
-                query = state.searchQuery,
-                onQueryChange = viewModel::onSearchQueryChange,
-                onSearch = { viewModel.searchArtworks() },
-                state = state,
-                onClear = {
-                    viewModel.onSearchQueryChange("")
-                    focusManager.clearFocus()
-                }
-            )
+            Column(
+                modifier = Modifier.padding(horizontal = 16.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.are_you_interested_in_something),
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontWeight = FontWeight.Bold
+                    ),
+                    fontSize = 25.sp,
+                    modifier = Modifier
+                        .padding(start = 8.dp, top = 32.dp, bottom = 4.dp)
+                        .fillMaxWidth()
+                )
+
+                SearchTopBar(
+                    query = state.searchQuery,
+                    onQueryChange = viewModel::onSearchQueryChange,
+                    onSearch = { viewModel.searchArtworks() },
+                    state = state,
+                    onClear = {
+                        viewModel.onSearchQueryChange("")
+                        focusManager.clearFocus()
+                    }
+                )
+            }
         },
         floatingActionButton = {
             if (state.searchQuery.isNotEmpty()) {
@@ -138,26 +154,6 @@ private fun SearchResultsList(
     artworkSearchItems: List<SearchItem>,
     onArtworkSelected: (String) -> Unit,
 ) {
-
-//    Column(Modifier.verticalScroll(rememberScrollState())) {
-//        artworkSearchItems.forEach { artwork ->
-//            ListItem(
-//                headlineContent = {
-//                    ArtworkSearchItem(
-//                        artworkSearchItem = artwork,
-//                        onClick = { onArtworkSelected(artwork.id) }
-//                    )
-//                },
-//                modifier = Modifier
-//                    .clickable {
-//                        //textFieldState.edit { replace(0, length, result) }
-//                        //expanded = false
-//                    }
-//                    .fillMaxWidth()
-//            )
-//        }
-//    }
-
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center
@@ -208,7 +204,12 @@ private fun SearchTopBar(
                     ),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 8.dp),
+                        .border(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
+                            shape = MaterialTheme.shapes.extraLarge
+                        )
+                        .padding(horizontal = 8.dp, vertical = 4.dp),
                     inputField = {
                         SearchBarDefaults.InputField(
                             query = query,
@@ -219,7 +220,7 @@ private fun SearchTopBar(
                             },
                             expanded = expanded,
                             onExpandedChange = { expanded = it },
-                            placeholder = { Text("Search") }
+                            placeholder = { Text(stringResource(R.string.search)) }
                         )
                     },
                     expanded = expanded,
@@ -255,7 +256,7 @@ private fun ArtworkSearchItem(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Add AsyncImage here when ready
+            // можно добавить async image
             Spacer(modifier = Modifier.size(48.dp))
 
             Column(modifier = Modifier.weight(1f)) {
@@ -271,14 +272,6 @@ private fun ArtworkSearchItem(
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-//                Text(
-//                    text = artworkSearchItem.artistDisplay,
-//                    style = MaterialTheme.typography.bodyMedium.copy(
-//                        color = MaterialTheme.colorScheme.onSurfaceVariant
-//                    ),
-//                    maxLines = 1,
-//                    overflow = TextOverflow.Ellipsis
-//                )
             }
         }
     }
@@ -322,7 +315,7 @@ private fun ErrorState(error: Throwable) {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Error occurred",
+            text = stringResource(R.string.error_unknown),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.error
         )
@@ -367,7 +360,7 @@ fun EmptySearchState() {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Введите запрос для поиска произведений",
+            text = stringResource(R.string.enter_query),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
         )

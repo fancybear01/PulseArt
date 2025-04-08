@@ -6,4 +6,7 @@
     <string name="error_unknown">Something went wrong. Please try again later.</string>
     <string name="error_serialization">Couldn\'t serialize or deserialize data..</string>
     <string name="search_artworks">Search artowks</string>
+    <string name="search">Search</string>
+    <string name="enter_query">Enter a query to search for works</string>
+    <string name="are_you_interested_in_something">Are you interested in something?</string>
 </resources>

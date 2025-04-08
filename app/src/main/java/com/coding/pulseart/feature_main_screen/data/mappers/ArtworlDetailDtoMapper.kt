@@ -10,7 +10,12 @@ fun ArtworkDetailDto.toArtworkDetail(): ArtworkDetail {
         id = id,
         title = title,
         artistDisplay = artist_display,
-        imageUrl = "https://www.artic.edu/iiif/2/$image_id/full/400,/0/default.jpg"
+        imageUrl = "https://www.artic.edu/iiif/2/$image_id/full/400,/0/default.jpg",
+        dateStart = date_start.toString(),
+        dateEnd = date_end.toString(),
+        dateDisplay = date_display,
+        description = description ?: "",
+        shortDescription = short_description ?: ""
     )
 }
 
@@ -19,7 +24,12 @@ fun FavouriteEntity.toArtworkDetail(): ArtworkDetail {
         id = id,
         title = title,
         artistDisplay = artistDisplay,
-        imageUrl = imageUrl
+        imageUrl = imageUrl,
+        dateStart = dateStart,
+        dateEnd = dateEnd,
+        dateDisplay = dateDisplay,
+        description = description ?: "",
+        shortDescription = shortDescription ?: ""
     )
 }
 
@@ -37,6 +47,11 @@ fun ArtworkDetail.toFavouriteEntity(): FavouriteEntity {
         id = id,
         title = title,
         artistDisplay = artistDisplay,
-        imageUrl = imageUrl
+        imageUrl = imageUrl,
+        dateStart = dateStart,
+        dateEnd = dateEnd,
+        dateDisplay = dateDisplay,
+        description = description ?: "",
+        shortDescription = shortDescription ?: ""
     )
 }

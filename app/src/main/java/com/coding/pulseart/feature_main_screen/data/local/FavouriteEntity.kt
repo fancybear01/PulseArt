@@ -10,4 +10,9 @@ data class FavouriteEntity(
     val title: String,
     val artistDisplay: String,
     val imageUrl: String,
+    val dateStart: String = "0",
+    val dateEnd: String = "0",
+    val dateDisplay: String = "",
+    val description: String? = "",
+    val shortDescription: String? = ""
 )

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -52,6 +53,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -60,8 +62,12 @@ import coil.compose.AsyncImage
 import com.coding.pulseart.R
 import com.coding.pulseart.core.presentation.util.ObserveAsEvents
 import com.coding.pulseart.core.presentation.util.toString
+import com.coding.pulseart.feature_main_screen.data.mappers.toArtworkUi
+import com.coding.pulseart.feature_main_screen.domain.Artwork
 import com.coding.pulseart.feature_main_screen.domain.ArtworkDetail
 import com.coding.pulseart.feature_main_screen.presentation.art_list.ArtworkListEvent.Error
+import com.coding.pulseart.feature_main_screen.presentation.art_list.components.ArtworkListItem
+import com.coding.pulseart.ui.theme.PulseArtTheme
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -117,7 +123,7 @@ fun ArtworkDetailScreenCore(
     ) { paddingValues ->
         BoxWithConstraints(
             modifier = Modifier
-                .padding(paddingValues)
+                //.padding(paddingValues)
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background),
             contentAlignment = Alignment.Center
@@ -138,7 +144,7 @@ fun ArtworkDetailScreenCore(
                 state.artworkDetail != null -> {
                     state.artworkDetail?.let { artworkDetail ->
                         ArtworkDetailScreen(
-                            modifier = Modifier.padding(paddingValues),
+                            //modifier = Modifier.padding(paddingValues),
                             artworkDetail = artworkDetail
                         )
                     }
@@ -206,14 +212,7 @@ fun ArtworkDetailScreen(
                 model = artworkDetail.imageUrl,
                 contentDescription = artworkDetail.title,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize(),
-//                placeholder = painterResource(R.drawable.placeholder_image),
-//                error = painterResource(R.drawable.error_image),
-//                loading = {
-//                    CircularProgressIndicator(
-//                        modifier = Modifier.align(Alignment.Center)
-//                    )
-//                }
+                modifier = Modifier.fillMaxSize()
             )
         }
 
@@ -242,8 +241,81 @@ fun ArtworkDetailScreen(
                 color = MaterialTheme.colorScheme.onBackground
             )
 
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row {
+                Text(
+                    text = "Date: ",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontStyle = FontStyle.Italic,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 2,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = artworkDetail.dateStart,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontStyle = FontStyle.Italic,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 2,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+
+                Text(
+                    text = "-",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontStyle = FontStyle.Italic,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 2,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+
+                Text(
+                    text = artworkDetail.dateEnd,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontStyle = FontStyle.Italic,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 2,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = artworkDetail.description ?: "",
+                style = MaterialTheme.typography.bodyMedium,
+                fontStyle = FontStyle.Italic,
+                overflow = TextOverflow.Ellipsis,
+                //maxLines = 2,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
         }
     }
 }
+
+
+@PreviewLightDark
+@Composable
+private fun ArtworkDetailPreview() {
+    PulseArtTheme {
+        ArtworkDetailScreen(
+            artworkDetail = previewArtwork
+        )
+    }
+}
+
+internal val previewArtwork = ArtworkDetail(
+    id = 1,
+    title = "A Sunday on La Grande Jatte — 1884",
+    artistDisplay = "Georges Seurat (French, 1859–1891)",
+    imageUrl = "https://www.artic.edu/iiif/2/2d484387-2509-5e8e-2c43-22f9981972eb/full/843,/0/default.jpg",
+    dateStart = "1920",
+    dateEnd = "1922",
+    dateDisplay = "1922",
+    description = "<p>The practice of decorating tiles with bright colors outlined in black was known as cuerda seca, which translates as “dry cord” from Spanish. Cuerda seca developed in the Islamic lands of Spain, Iran, and Central Asia at the end of the 14th century and remained popular in these regions for several centuries. The black line between colors allowed for carefully distinguished forms that otherwise might have been muddles during the firing process.These tiles are a section of a larger scene depicting the life of the epic Persian hero Bahram Gur. Here, gazelles festively play along the bank of a river as young man plays the flute and another presumably bridles a horse, of which only the nose is visible. Similar figures appear in different sets of tiles, evidence of the use of pattern books or stock images for similar scenes. The tales of Bahram Gur were popular subjects for both smaller decorative objects and long epic books, such as the lavishly decorated <em>Khamsa of Nizami</em>, a 16th-century manuscript created for the Mughal Emperor Akbar.</p>\\n",
+    shortDescription = "Alma Thomas was enthralled by astronauts and outer space. This painting, made when she was 81, showcases that fascination through her signature style of short, rhythmic strokes of paint. “Color is life, and light is the mother of color,” she once proclaimed. In 1972, she became the first African American woman to have a solo exhibition at the Whitney Museum of American Art in New York."
+)
