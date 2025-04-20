@@ -10,4 +10,6 @@
     <string name="search">Поиск</string>
     <string name="enter_query">Введите запрос для поиска произведений</string>
     <string name="are_you_interested_in_something">Что-то интересует?</string>
+    <string name="add_your_favorites_from_the_home_screen">добавьте понравившиеся с главного экрана</string>
+    <string name="favourite">Ваши избранные</string>
 </resources>

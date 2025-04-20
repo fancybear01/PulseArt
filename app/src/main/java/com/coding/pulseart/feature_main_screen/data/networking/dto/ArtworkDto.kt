@@ -7,5 +7,6 @@ data class ArtworkDto(
     val id: Int,
     val title: String,
     val artist_display: String,
-    val image_id: String?
+    val image_id: String?,
+    val artwork_type_title: String
 )

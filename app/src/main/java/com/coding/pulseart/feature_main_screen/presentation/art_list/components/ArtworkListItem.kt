@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,18 +23,14 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.coding.pulseart.feature_main_screen.data.mappers.toArtworkUi
-import com.coding.pulseart.feature_main_screen.domain.Artwork
-import com.coding.pulseart.feature_main_screen.presentation.models.ArtworkUi
-import com.coding.pulseart.ui.theme.AppTypography
+import com.coding.pulseart.feature_main_screen.presentation.models.Artwork
 import com.coding.pulseart.ui.theme.PulseArtTheme
 
 @Composable
 fun ArtworkListItem(
-    artworkUi: ArtworkUi,
+    artwork: Artwork,
     onArtworkDetailClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -47,14 +42,14 @@ fun ArtworkListItem(
 
     Column(
         modifier = modifier
-            .clickable {onArtworkDetailClick(artworkUi.id)}
+            .clickable {onArtworkDetailClick(artwork.id)}
             .padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.Start
     ) {
         AsyncImage(
-            model = artworkUi.imageUrl,
-            contentDescription = artworkUi.title,
+            model = artwork.imageUrl,
+            contentDescription = artwork.title,
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
@@ -65,7 +60,7 @@ fun ArtworkListItem(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = artworkUi.title,
+            text = artwork.title,
             fontSize = 20.sp,
             style = MaterialTheme.typography.displayLarge,
             maxLines = 1,
@@ -77,7 +72,7 @@ fun ArtworkListItem(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = artworkUi.artistDisplay,
+            text = artwork.artistDisplay,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             fontSize = 17.sp,
@@ -108,7 +103,7 @@ fun ArtworkListItem(
 private fun ArtworkListItemPreview() {
     PulseArtTheme {
         ArtworkListItem(
-            artworkUi = previewArtwork,
+            artwork = previewArtwork,
             onArtworkDetailClick = {},
             modifier = Modifier.background(
                 MaterialTheme.colorScheme.background
@@ -121,5 +116,6 @@ internal val previewArtwork = Artwork(
     id = "1",
     title = "A Sunday on La Grande Jatte — 1884",
     artistDisplay = "Georges Seurat (French, 1859–1891)",
-    imageUrl = "https://www.artic.edu/iiif/2/2d484387-2509-5e8e-2c43-22f9981972eb/full/843,/0/default.jpg"
-).toArtworkUi()
+    imageUrl = "https://www.artic.edu/iiif/2/2d484387-2509-5e8e-2c43-22f9981972eb/full/843,/0/default.jpg",
+    artworkType = "Painting"
+)

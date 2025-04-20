@@ -1,10 +1,10 @@
 package com.coding.pulseart.feature_main_screen.presentation.art_list
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coding.pulseart.core.domain.util.onError
 import com.coding.pulseart.core.domain.util.onSuccess
-import com.coding.pulseart.feature_main_screen.data.mappers.toArtworkUi
 import com.coding.pulseart.feature_main_screen.domain.ArtworkDataSource
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +20,7 @@ class ArtListViewModel(
 ) : ViewModel() {
     private val _state = MutableStateFlow(ArtworkListState())
     val state = _state
-        .onStart { loadArtworks() }
+        .onStart { onAction(ArtworkListAction.LoadInitial) }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(
@@ -31,6 +31,15 @@ class ArtListViewModel(
 
     private val _events = Channel<ArtworkListEvent>()
     val events = _events.receiveAsFlow()
+
+    private fun setFilter(filter: ArtworkFilterType) {
+        _state.update {
+            it.copy(
+                selectedFilter = filter,
+                shouldResetPagination = true
+            )
+        }
+    }
 
     fun onAction(action: ArtworkListAction) {
         when (action) {
@@ -47,11 +56,31 @@ class ArtListViewModel(
                     loadArtworks()
                 }
             }
+            is ArtworkListAction.FilterChanged -> {
+                val newFilter = action.filter
+                _state.update {
+                    // Восстанавливаем из кэша или начинаем заново
+                    val cachedArtworks = it.cache[newFilter] ?: emptyList()
+
+                    it.copy(
+                        selectedFilter = newFilter,
+                        artworks = cachedArtworks,
+                        nextPage = if (cachedArtworks.isEmpty()) 1 else it.nextPage,
+                        isEndReached = cachedArtworks.isNotEmpty() && it.isEndReached
+                    )
+                }
+
+                // Загружаем только если в кэше нет данных
+                if (state.value.artworks.isEmpty()) {
+                    loadArtworks(page = 1)
+                }
+            }
         }
     }
 
 
     private fun loadArtworks(page: Int? = null) {
+        Log.d("Paginate 2", "page is ${_state.value.nextPage}")
         val targetPage = page ?: _state.value.nextPage
         if (state.value.isLoading ||
             (targetPage != null && targetPage > 1 && state.value.isEndReached)) return
@@ -65,17 +94,20 @@ class ArtListViewModel(
 
 
             artworkDataSource
-                .getArtworks(targetPage.toString())
+                .getArtworks(targetPage.toString(), state.value.selectedFilter)
                 .onSuccess { response ->
                     val (newArtworks, pagination) = response
                     _state.update {
+
+                        val updatedCache = it.cache.toMutableMap().apply {
+                            val existing = get(state.value.selectedFilter) ?: emptyList()
+                            put(state.value.selectedFilter, existing + newArtworks)
+                        }
+
                         it.copy(
                             isLoading = false,
-                            artworks = if (page == null) {
-                                it.artworks + newArtworks.map { it.toArtworkUi() }
-                            } else {
-                                newArtworks.map { it.toArtworkUi() }
-                            },
+                            artworks = it.artworks + newArtworks,
+                            cache = updatedCache,
                             isEndReached = pagination.currentPage >= pagination.totalPages,
                             nextPage = pagination.currentPage + 1
                         )

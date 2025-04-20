@@ -1,17 +1,12 @@
 package com.coding.pulseart.feature_main_screen.presentation.art_search
 
-
-import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,8 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Error
@@ -31,28 +24,23 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coding.pulseart.core.presentation.util.toString
-import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarColors
@@ -65,11 +53,12 @@ import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.coding.pulseart.R
-import com.coding.pulseart.feature_main_screen.domain.SearchItem
+import com.coding.pulseart.core.presentation.util.ObserveAsEvents
+import com.coding.pulseart.feature_main_screen.presentation.models.SearchItem
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import com.coding.pulseart.feature_main_screen.presentation.art_search.SearchEvent.Error
 
 @Composable
 fun SearchScreenCore(
@@ -78,12 +67,23 @@ fun SearchScreenCore(
     val viewModel: SearchViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    val focusManager = LocalFocusManager.current
+
+    ObserveAsEvents(events = viewModel.events) { event ->
+        when (event) {
+            is Error -> {
+                Toast.makeText(
+                    context,
+                    event.error.toString(context),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
 
     LaunchedEffect(Unit) {
         snapshotFlow { state.searchQuery }
             .distinctUntilChanged()
-            .debounce(300) // Дополнительный debounce в UI
+            .debounce(300)
             .collect { query ->
                 if (query.length >= 3) {
                     viewModel.searchArtworks()
@@ -112,11 +112,7 @@ fun SearchScreenCore(
                     query = state.searchQuery,
                     onQueryChange = viewModel::onSearchQueryChange,
                     onSearch = { viewModel.searchArtworks() },
-                    state = state,
-                    onClear = {
-                        viewModel.onSearchQueryChange("")
-                        focusManager.clearFocus()
-                    }
+                    state = state
                 )
             }
         },
@@ -176,8 +172,7 @@ private fun SearchTopBar(
     query: String,
     onQueryChange: (String) -> Unit,
     onSearch: () -> Unit,
-    state: SearchState,
-    onClear: () -> Unit
+    state: SearchState
 ) {
     var active by remember { mutableStateOf(false) }
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -227,7 +222,7 @@ private fun SearchTopBar(
                     onExpandedChange = { expanded = it },
                 ) {
                     when (query.length) {
-                        in 0..2 -> state.results = emptyList() //onSearch()
+                        in 0..2 -> state.results = emptyList()
                         else -> onSearch()
                     }
                 }
@@ -322,25 +317,7 @@ private fun ErrorState(error: Throwable) {
     }
 }
 
-@Composable
-private fun ObserveSearchEvents(events: Flow<SearchEvent>, context: Context) {
-    LaunchedEffect(Unit) {
-        events.collect { event ->
-            when (event) {
-                is SearchEvent.Error -> {
-                    Toast.makeText(
-                        context,
-                        event.error.toString(context),
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-//                SearchEvent.ClearSearch -> {
-//                    // Обработка очистки поиска
-//                }
-            }
-        }
-    }
-}
+
 
 
 @Composable
@@ -354,7 +331,7 @@ fun EmptySearchState() {
     ) {
         Icon(
             imageVector = Icons.Outlined.Search,
-            contentDescription = "Пустой поиск",
+            contentDescription = "empty search",
             modifier = Modifier.size(64.dp),
             tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
         )

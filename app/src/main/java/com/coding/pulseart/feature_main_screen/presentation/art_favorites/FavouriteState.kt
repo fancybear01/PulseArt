@@ -1,9 +1,8 @@
 package com.coding.pulseart.feature_main_screen.presentation.art_favorites
 
-import com.coding.pulseart.feature_main_screen.domain.ArtworkDetail
-import com.coding.pulseart.feature_main_screen.presentation.models.ArtworkUi
+import com.coding.pulseart.feature_main_screen.presentation.models.Artwork
 
 data class FavouriteState(
     val isLoading: Boolean = false,
-    val artworks: List<ArtworkUi> = emptyList()
+    val artworks: List<Artwork> = emptyList()
 )

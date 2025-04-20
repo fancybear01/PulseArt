@@ -1,14 +1,11 @@
 package com.coding.pulseart.feature_main_screen.presentation.art_detail
 
 import android.annotation.SuppressLint
-import android.widget.Button
 import android.widget.Toast
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -19,24 +16,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -48,25 +39,16 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.wear.compose.material.ContentAlpha
 import coil.compose.AsyncImage
-import com.coding.pulseart.R
 import com.coding.pulseart.core.presentation.util.ObserveAsEvents
 import com.coding.pulseart.core.presentation.util.toString
-import com.coding.pulseart.feature_main_screen.data.mappers.toArtworkUi
-import com.coding.pulseart.feature_main_screen.domain.Artwork
-import com.coding.pulseart.feature_main_screen.domain.ArtworkDetail
-import com.coding.pulseart.feature_main_screen.presentation.art_list.ArtworkListEvent.Error
-import com.coding.pulseart.feature_main_screen.presentation.art_list.components.ArtworkListItem
+import com.coding.pulseart.feature_main_screen.presentation.models.ArtworkDetail
 import com.coding.pulseart.ui.theme.PulseArtTheme
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -115,12 +97,13 @@ fun ArtworkDetailScreenCore(
                             .graphicsLayer {
                                 scaleX = 1f + 0.2f * animatedProgress
                                 scaleY = 1f + 0.2f * animatedProgress
-                            }
+                            },
+                        tint = Color.Red
                     )
                 }
             }
         }
-    ) { paddingValues ->
+    ) { _ ->
         BoxWithConstraints(
             modifier = Modifier
                 //.padding(paddingValues)
@@ -144,7 +127,6 @@ fun ArtworkDetailScreenCore(
                 state.artworkDetail != null -> {
                     state.artworkDetail?.let { artworkDetail ->
                         ArtworkDetailScreen(
-                            //modifier = Modifier.padding(paddingValues),
                             artworkDetail = artworkDetail
                         )
                     }

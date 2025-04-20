@@ -1,20 +1,24 @@
 package com.coding.pulseart.feature_main_screen.presentation.art_list
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -35,7 +39,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.coding.pulseart.core.presentation.util.ObserveAsEvents
 import com.coding.pulseart.core.presentation.util.toString
 import com.coding.pulseart.feature_main_screen.presentation.art_list.ArtworkListEvent.*
@@ -69,6 +72,46 @@ fun ArtworkListScreenCore(
     )
 }
 
+@Composable
+private fun ArtworkFilters(
+    currentFilter: ArtworkFilterType,
+    onFilterSelected: (ArtworkFilterType) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        FilterChip(
+            selected = currentFilter == ArtworkFilterType.All,
+            onClick = { onFilterSelected(ArtworkFilterType.All) },
+            label = { Text("All") },
+            modifier = Modifier
+                .height(36.dp)
+                //.weight(1f)
+        )
+        FilterChip(
+            selected = currentFilter == ArtworkFilterType.Painting,
+            onClick = { onFilterSelected(ArtworkFilterType.Painting) },
+            label = { Text("Painting") },
+            modifier = Modifier
+                .height(36.dp)
+                //.weight(1f)
+        )
+        FilterChip(
+            selected = currentFilter == ArtworkFilterType.Sculpture,
+            onClick = { onFilterSelected(ArtworkFilterType.Sculpture) },
+            label = { Text("Sculpture") },
+            modifier = Modifier
+                .height(36.dp)
+                //.weight(1f)
+        )
+    }
+}
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ArtworkListScreen(
@@ -85,20 +128,28 @@ fun ArtworkListScreen(
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .fillMaxSize(),
         topBar = {
-            TopAppBar(
-                scrollBehavior = scrollBehavior,
-                title = {
-                    Text(
-                        text = "PulseArt",
-                        fontSize = 33.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.padding(start = 8.dp)
+            Column {
+                TopAppBar(
+                    scrollBehavior = scrollBehavior,
+                    title = {
+                        Text(
+                            text = "PulseArt",
+                            fontSize = 33.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                    },
+                    windowInsets = WindowInsets(
+                        top = 0.dp, bottom = 8.dp
                     )
-                },
-                windowInsets = WindowInsets(
-                    top =0.dp, bottom = 8.dp
                 )
-            )
+                ArtworkFilters(
+                    currentFilter = state.selectedFilter,
+                    onFilterSelected = { filter ->
+                        onAction(ArtworkListAction.FilterChanged(filter))
+                    }
+                )
+            }
         }
     ) { innerPadding ->
         Box(
@@ -123,10 +174,10 @@ fun ArtworkListScreen(
                     val totalItems = listState.layoutInfo.totalItemsCount
                     val lastVisibleIndex = listState.layoutInfo
                         .visibleItemsInfo.lastOrNull()?.index ?: 0
-                    lastVisibleIndex == totalItems - 1 && !state.isLoading
+                    ((lastVisibleIndex == totalItems - 1) || (totalItems == 0)) && !state.isLoading
                 }
             }
-
+            Log.d("Paginate 1", "should paginate $shouldPaginate")
             LaunchedEffect(key1 = listState) {
                 snapshotFlow { shouldPaginate.value }
                     .distinctUntilChanged()
@@ -139,9 +190,9 @@ fun ArtworkListScreen(
                 contentPadding = PaddingValues(bottom = 8.dp),
                 state = listState
             ) {
-                items(state.artworks) { artworkUi ->
+                items(state.artworks) { artwork ->
                     ArtworkListItem(
-                        artworkUi = artworkUi,
+                        artwork = artwork,
                         onArtworkDetailClick = onArtworkClick,
                         modifier = Modifier.fillMaxWidth()
                     )

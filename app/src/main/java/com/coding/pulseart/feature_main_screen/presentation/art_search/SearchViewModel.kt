@@ -2,9 +2,7 @@ package com.coding.pulseart.feature_main_screen.presentation.art_search
 
 import androidx.lifecycle.ViewModel
 import com.coding.pulseart.feature_main_screen.domain.ArtworkDataSource
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -12,8 +10,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.update
 import com.coding.pulseart.core.domain.util.onError
 import com.coding.pulseart.core.domain.util.onSuccess
-import com.coding.pulseart.feature_main_screen.data.mappers.toArtworkUi
-import com.coding.pulseart.feature_main_screen.presentation.art_detail.ArtworkDetailAction
 
 class SearchViewModel(
     private val artworkDataSource: ArtworkDataSource
@@ -44,11 +40,7 @@ class SearchViewModel(
         }
     }
 
-   // private var searchJob: Job? = null
-
     fun searchArtworks() {
-      //  searchJob?.cancel() // Отменяем предыдущий запрос
-      //  searchJob = viewModelScope.launch {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = false, error = null) }
 

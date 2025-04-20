@@ -9,8 +9,7 @@ import com.coding.pulseart.core.domain.util.onSuccess
 import com.coding.pulseart.feature_main_screen.data.local.FavouriteDao
 import com.coding.pulseart.feature_main_screen.data.mappers.toFavouriteEntity
 import com.coding.pulseart.feature_main_screen.domain.ArtworkDataSource
-import com.coding.pulseart.feature_main_screen.domain.ArtworkDetail
-import com.coding.pulseart.feature_main_screen.presentation.art_list.ArtworkListEvent
+import com.coding.pulseart.feature_main_screen.presentation.models.ArtworkDetail
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

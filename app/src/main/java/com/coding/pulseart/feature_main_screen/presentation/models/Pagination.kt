@@ -1,4 +1,4 @@
-package com.coding.pulseart.feature_main_screen.domain
+package com.coding.pulseart.feature_main_screen.presentation.models
 
 data class Pagination(
     val totalItems: Int,

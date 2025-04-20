@@ -1,5 +1,6 @@
 package com.coding.pulseart.feature_main_screen.presentation.art_favorites
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,22 +20,23 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.coding.pulseart.feature_main_screen.presentation.art_list.ArtworkListAction
+import com.coding.pulseart.R
+import com.coding.pulseart.core.presentation.util.ObserveAsEvents
+import com.coding.pulseart.core.presentation.util.toString
+import com.coding.pulseart.feature_main_screen.presentation.art_list.ArtworkListEvent.Error
 import com.coding.pulseart.feature_main_screen.presentation.art_list.components.ArtworkListItem
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -43,6 +45,18 @@ fun FavouriteScreenCore(
     onArtworkClick: (String) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    ObserveAsEvents(events = viewModel.events) { event ->
+        when (event) {
+            is Error -> {
+                Toast.makeText(
+                    context,
+                    event.error.toString(context),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
     FavouriteScreen(
         state = state,
         onAction = viewModel::onAction,
@@ -70,14 +84,13 @@ fun FavouriteScreen(
                 scrollBehavior = scrollBehavior,
                 title = {
                     Text(
-                        text = "Favourite",
+                        text = stringResource(R.string.favourite),
                         fontSize = 33.sp,
                         fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.padding(start = 8.dp)
                     )
                 },
                 windowInsets = WindowInsets(
-                    top = 50.dp, bottom = 8.dp
+                    top = 0.dp, bottom = 8.dp
                 )
             )
         }
@@ -96,6 +109,16 @@ fun FavouriteScreen(
                 if (state.isLoading && state.artworks.isEmpty()) {
                     CircularProgressIndicator()
                 }
+                else if (state.artworks.isEmpty()) {
+                    Text(
+                        text = stringResource(R.string.add_your_favorites_from_the_home_screen),
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontStyle = FontStyle.Italic,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 2,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                }
             }
 
             val listState = rememberLazyListState()
@@ -105,9 +128,9 @@ fun FavouriteScreen(
                 contentPadding = PaddingValues(bottom = 8.dp),
                 state = listState
             ) {
-                items(state.artworks) { artworkUi ->
+                items(state.artworks) { artwork ->
                     ArtworkListItem(
-                        artworkUi = artworkUi,
+                        artwork = artwork,
                         onArtworkDetailClick = onArtworkClick,
                         modifier = Modifier.fillMaxWidth()
                     )

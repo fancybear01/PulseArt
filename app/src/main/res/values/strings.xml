@@ -9,4 +9,6 @@
     <string name="search">Search</string>
     <string name="enter_query">Enter a query to search for works</string>
     <string name="are_you_interested_in_something">Are you interested in something?</string>
+    <string name="add_your_favorites_from_the_home_screen">Add your favorites from the home screen</string>
+    <string name="favourite">Your favorites</string>
 </resources>
