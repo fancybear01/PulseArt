@@ -12,4 +12,13 @@
     <string name="are_you_interested_in_something">Что-то интересует?</string>
     <string name="add_your_favorites_from_the_home_screen">добавьте понравившиеся с главного экрана</string>
     <string name="favourite">Ваши избранные</string>
+    <string name="world_of_art_in_your_app">Мир искусства в вашем телефоне</string>
+    <string name="discover_thousands">Исследуйте тысячи произведений искусства со всего мира</string>
+    <string name="save_favourite">Сохраняйте любимое</string>
+    <string name="add_fovourite_artworks">Добавляйте понравившиеся работы в избранное для быстрого доступа</string>
+    <string name="search_launch">Поиск</string>
+    <string name="find_interseting_artworks">Находите интересующие вас произведения искусства</string>
+    <string name="start_watching">Начать просмотр</string>
+    <string name="next">Далее</string>
+    <string name="skip">Пропустить</string>
 </resources>

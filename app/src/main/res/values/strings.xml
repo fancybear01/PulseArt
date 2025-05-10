@@ -11,4 +11,13 @@
     <string name="are_you_interested_in_something">Are you interested in something?</string>
     <string name="add_your_favorites_from_the_home_screen">Add your favorites from the home screen</string>
     <string name="favourite">Your favorites</string>
+    <string name="world_of_art_in_your_app">The world of art in your phone</string>
+    <string name="discover_thousands">Explore thousands of artworks from all over the world</string>
+    <string name="save_favourite">Save what you love</string>
+    <string name="add_fovourite_artworks">Add your favorite works to favorites for quick access</string>
+    <string name="search_launch">Search</string>
+    <string name="find_interseting_artworks">Find the works of art you are interested in</string>
+    <string name="start_watching">Start viewing</string>
+    <string name="next">Next</string>
+    <string name="skip">Skip</string>
 </resources>

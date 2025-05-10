@@ -106,7 +106,6 @@ fun ArtworkDetailScreenCore(
     ) { _ ->
         BoxWithConstraints(
             modifier = Modifier
-                //.padding(paddingValues)
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background),
             contentAlignment = Alignment.Center
@@ -141,18 +140,6 @@ fun ArtworkDetailScreenCore(
                             event.error.toString(context),
                             Toast.LENGTH_LONG
                         ).show()
-                    }
-
-                    is ArtworkDetailEvent.FavouriteStatusChanged -> {
-                        scope.launch {
-                            val snackbarMessage = if (state.isFavorite) {
-                                // context.getString(R.string.added_to_favorites)
-                            } else {
-                                //context.getString(R.string.removed_from_favorites)
-                            }
-
-                            //SnackbarHostState().showSnackbar(snackbarMessage)
-                        }
                     }
 
                     is ArtworkDetailEvent.UnknownError -> {

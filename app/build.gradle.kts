@@ -86,5 +86,15 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
 
-    implementation("androidx.compose.material3:material3:1.1.0")
+    //
+    implementation(libs.material3)
+
+    //
+    implementation(libs.accompanist.pager)
+    implementation(libs.accompanist.pager.indicators)
+
+    implementation(libs.androidx.foundation)
+
+    implementation (libs.foundation)
+    implementation (libs.ui)
 }

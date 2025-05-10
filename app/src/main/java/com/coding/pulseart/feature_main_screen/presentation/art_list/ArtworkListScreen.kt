@@ -1,6 +1,5 @@
 package com.coding.pulseart.feature_main_screen.presentation.art_list
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -90,7 +89,6 @@ private fun ArtworkFilters(
             label = { Text("All") },
             modifier = Modifier
                 .height(36.dp)
-                //.weight(1f)
         )
         FilterChip(
             selected = currentFilter == ArtworkFilterType.Painting,
@@ -98,7 +96,6 @@ private fun ArtworkFilters(
             label = { Text("Painting") },
             modifier = Modifier
                 .height(36.dp)
-                //.weight(1f)
         )
         FilterChip(
             selected = currentFilter == ArtworkFilterType.Sculpture,
@@ -106,7 +103,6 @@ private fun ArtworkFilters(
             label = { Text("Sculpture") },
             modifier = Modifier
                 .height(36.dp)
-                //.weight(1f)
         )
     }
 }
@@ -177,7 +173,6 @@ fun ArtworkListScreen(
                     ((lastVisibleIndex == totalItems - 1) || (totalItems == 0)) && !state.isLoading
                 }
             }
-            Log.d("Paginate 1", "should paginate $shouldPaginate")
             LaunchedEffect(key1 = listState) {
                 snapshotFlow { shouldPaginate.value }
                     .distinctUntilChanged()

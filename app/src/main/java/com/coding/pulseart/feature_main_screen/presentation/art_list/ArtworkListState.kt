@@ -11,7 +11,7 @@ data class ArtworkListState (
     val selectedArtwork: Artwork? = null,
     val nextPage: Int? = null,
     val isEndReached: Boolean = false,
-    val totalPages: Int = 1411,
+    val totalPages: Int = 1284,
     val selectedFilter: ArtworkFilterType = ArtworkFilterType.All,
     val shouldResetPagination: Boolean = false
 )

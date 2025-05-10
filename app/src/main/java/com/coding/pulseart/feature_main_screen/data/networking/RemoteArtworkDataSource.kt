@@ -34,8 +34,6 @@ class RemoteArtworkDataSource(
                 url {
                     parameters.append("page", nextPage)
                     parameters.append("limit", "100")
-//                    if (nextPage != null) parameters.append("page", nextPage)
-//                    else parameters.append("page", "1")
                 }
             }
         }.map { response ->

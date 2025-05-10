@@ -24,9 +24,6 @@ class ArtworkDetailViewModel(
     private val _state = MutableStateFlow(ArtworkDetailState())
     val state = _state
 
-    private val _isFavorite = MutableStateFlow(false)
-    val isFavorite: StateFlow<Boolean> = _isFavorite
-
     fun onAction(action: ArtworkDetailAction) {
         when (action) {
             is ArtworkDetailAction.LoadArtworkDetail -> getArtwork(action.artworkId)
@@ -51,7 +48,6 @@ class ArtworkDetailViewModel(
                     dao.insert(artworkDetail.toFavouriteEntity())
                 }
                 _state.update { it.copy(isFavorite = !it.isFavorite) }
-                _events.send(ArtworkDetailEvent.FavouriteStatusChanged)
             } ?: run {
                 _events.send(ArtworkDetailEvent.UnknownError(Exception("UnknownError")))
             }
@@ -67,7 +63,6 @@ class ArtworkDetailViewModel(
 
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            Log.d(TAG, "getArtwork")
             artworkDataSource
                 .getArtwork(artworkId)
                 .onSuccess { artworkDetail ->

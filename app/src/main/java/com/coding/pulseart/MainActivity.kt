@@ -6,54 +6,50 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import androidx.navigation.toRoute
 import com.coding.pulseart.feature_main_screen.presentation.art_detail.ArtworkDetailScreenCore
 import com.coding.pulseart.feature_main_screen.presentation.art_favorites.FavouriteScreenCore
 import com.coding.pulseart.feature_main_screen.presentation.art_list.ArtworkListScreenCore
 import com.coding.pulseart.feature_main_screen.presentation.art_search.SearchScreenCore
+import com.coding.pulseart.first_launch.OnboardingState
 import com.coding.pulseart.navigation.BottomNavigationBar
 import com.coding.pulseart.navigation.Screen
 import com.coding.pulseart.ui.theme.PulseArtTheme
+import com.coding.pulseart.first_launch.OnboardingScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val onboardingState = OnboardingState(this)
+
         setContent {
             PulseArtTheme {
-                MainScreen()
+                var showOnboarding by remember { mutableStateOf(!onboardingState.isOnboardingComplete()) }
+
+                if (showOnboarding) {
+                    OnboardingScreen {
+                        onboardingState.completeOnboarding()
+                        showOnboarding = false
+                    }
+                } else {
+                    MainScreen()
+                }
             }
         }
     }
 }
-
-
-//@Composable
-//fun Main() {
-//    val navController = rememberNavController()
-//    Column(Modifier.padding(8.dp)) {
-//        NavHost(
-//            navController,
-//            startDestination = NavRoutes.Home.route,
-//            modifier = Modifier.weight(1f)
-//        ) {
-//            composable(NavRoutes.Home.route) { ArtworkListScreenCore {  } }
-//            composable(NavRoutes.Favourite.route) { Contacts() }
-//            composable(NavRoutes.Settings.route) { About() }
-//        }
-//        BottomNavigationBar(navController = navController)
-//    }
-//}
 
 @Composable
 fun MainScreen() {
