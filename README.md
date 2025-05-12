@@ -4,10 +4,10 @@ Your personal guide to the world of art. An application for researchers and conn
 
 ## 🌟 Features
 
-- [ ] Extensive collection — thousands of works of art from different eras and styles
+- [x] Extensive collection — thousands of works of art from different eras and styles
 - [x] Intelligent filtering — search by type
-- [ ] Optimized interface — smooth pagination and responsive design
-- [ ] Offline mode — caching your favorite works
+- [x] Optimized interface — smooth pagination and responsive design
+- [x] Offline mode — caching your favorite works
 
 ## Technology
 
